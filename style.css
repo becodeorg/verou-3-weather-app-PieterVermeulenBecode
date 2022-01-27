@@ -1,0 +1,29 @@
+body{
+    text-align: center;
+}
+
+#voorspelling{
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: aliceblue;
+    border: black solid 3px;
+    border-radius: 5px;
+    width: 70vw;
+    min-height: 70vh;
+}
+.eenDag{
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: blanchedalmond;
+    border: black solid 1px;
+    border-radius: 4px;
+}
+
+img{
+    width:20vh;
+    height: 20vh;
+}
