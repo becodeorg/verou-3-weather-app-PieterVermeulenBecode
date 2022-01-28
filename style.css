@@ -1,14 +1,19 @@
 body{
     text-align: center;
+    background-image: url("background.jpg");
 }
-
+.bold{
+    font-weight: bold;
+    color:rgba(220,20,60,1);
+}
 #voorspelling{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     margin-left: auto;
     margin-right: auto;
-    background-color: aliceblue;
-    border: black solid 3px;
+    background-color: rgba(240,248,255,0.5);
+    padding: 5px;
     border-radius: 5px;
     width: 70vw;
     min-height: 70vh;
@@ -18,12 +23,18 @@ body{
     flex-direction: column;
     margin-left: auto;
     margin-right: auto;
-    background-color: blanchedalmond;
-    border: black solid 1px;
-    border-radius: 4px;
+    justify-content: center;
+    background-color: rgba(255,235,205,0.5);
+    
+    border-radius: 50%;
+    height: 40vh;
+    width: 40vh;
 }
 
+
 img{
-    width:20vh;
-    height: 20vh;
+    width:15vh;
+    height: 15vh;
+    margin-left: auto;
+    margin-right: auto;
 }

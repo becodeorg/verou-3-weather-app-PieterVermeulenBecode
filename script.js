@@ -1,6 +1,9 @@
 import Data from "./data.gitignore/config.js";
 let weerData="";
 let landenData="";
+window.onload = function() {
+    document.getElementById("landen").focus();
+  };
 async function fetchApi(stad) {     
    
     fetch('https://api.openweathermap.org/data/2.5/forecast?q='+stad+','+landCode+'&APPID='+Data.key)  
@@ -13,6 +16,7 @@ async function fetchApi(stad) {
     .catch(function() {
         // catch any errors
         alert(stad+" is not known in this application");
+        document.getElementById("voorspelling").innerHTML="<h1>Please select a different city</h1>";
     });
 }
 
@@ -61,8 +65,10 @@ invoer.onchange= function maakLijst(land){
             newOption.innerText=landenData[i].cities[b];
             document.getElementById("steden").appendChild(newOption);
             }
+            document.getElementById("steden").focus();
         }
-    }           
+    }  
+             
     
 }
 const invoerStad=document.getElementById("steden")
@@ -70,6 +76,7 @@ invoerStad.onchange= function readyToFetch(){
     
     console.log(invoerStad.value);
     fetchApi(invoerStad.value);
+    document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+invoerStad.value+"</span>"
            
     
 }
@@ -77,29 +84,35 @@ invoerStad.onchange= function readyToFetch(){
 function displayWeather(){
     const voorspelZone=document.getElementById("voorspelling");
     voorspelZone.innerHTML="";
-    let dagenVanDeWeek=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+    let d=new Date();    
+    let day = d.getDate();
+    
+    let month=d.getMonth()+1;
+    console.log(day);
+     console.log(month+1);
+    let dagenVanDeWeek=[day+"/"+month,(day+1)+"/"+month,(day+2)+"/"+month,(day+3)+"/"+month,(day+4)+"/"+month,(day+5)+"/"+month,(day+6)+"/"+month];
+    
     for(let i=0;i<40;i=i+8){
     
     const newDiv4=document.createElement("div");
     newDiv4.className="eenDag";
     voorspelZone.appendChild(newDiv4);
 
-    const newTitle=document.createElement("h4");
+    const newTitle=document.createElement("h3");
     newTitle.innerText= dagenVanDeWeek[i/8];
     newDiv4.appendChild(newTitle);
     
     const newDiv2=document.createElement("div");
     newDiv2.innerText="Temp: "+(weerData.list[i].main.temp-273.15).toFixed(2)+ '°C';
     newDiv4.appendChild(newDiv2);
-    
+        
+    const newImg=document.createElement("img");
+    newImg.src="http://openweathermap.org/img/wn/"+weerData.list[i].weather[0].icon+".png";
+    newDiv4.appendChild(newImg);
+
     const newDiv3=document.createElement("div");
     newDiv3.innerText="Feel's like: "+(weerData.list[i].main.feels_like-273.15).toFixed(2)+ "°C";
     newDiv4.appendChild(newDiv3);
-    
-    const newImg=document.createElement("img");
-    newImg.src="http://openweathermap.org/img/wn/"+weerData.list[i].weather[0].icon+".png";
-    //10d@2x
-    newDiv4.appendChild(newImg);
 
     }
 }
