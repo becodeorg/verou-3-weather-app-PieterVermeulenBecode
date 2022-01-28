@@ -3,7 +3,26 @@ let weerData="";
 let landenData="";
 window.onload = function() {
     document.getElementById("landen").focus();
+    
   };
+
+function fetchPicture(cityName){
+    let count=0;
+   fetch("https://api.unsplash.com/search/photos?query=" + cityName + "&client_id=" +Data.accesKey)
+   //UNSPLASH_API_KEY
+   .then(function(resp) { return resp.json() }) // Convert data to json
+   .then(function(image) {
+       //2yJhcHBfaWQiOjEyMDd9
+       console.log(image);
+       document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
+       setInterval(function(){ 
+        document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
+        count=count+1;
+    }, 10000);
+       
+    });
+}
+
 async function fetchApi(stad) {     
    
     fetch('https://api.openweathermap.org/data/2.5/forecast?q='+stad+','+landCode+'&APPID='+Data.key)  
@@ -54,10 +73,10 @@ invoer.onchange= function maakLijst(land){
     
    
    for(let i=0;i<landenData.length;i++){
-       let raren=landenData[i].country;
+       let landNaam=landenData[i].country;
        huidiglandPositie=i;
        
-    if(invoer.value==raren){
+    if(invoer.value==landNaam){
         landCode=landenData[huidiglandPositie].iso2;
        console.log(landCode);
         for(let b=0;b<=landenData[i].cities.length;b++){
@@ -77,7 +96,7 @@ invoerStad.onchange= function readyToFetch(){
     console.log(invoerStad.value);
     fetchApi(invoerStad.value);
     document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+invoerStad.value+"</span>"
-           
+    fetchPicture(invoerStad.value);      
     
 }
 
