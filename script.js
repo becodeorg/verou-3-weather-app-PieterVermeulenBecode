@@ -1,12 +1,11 @@
 import Data from "./data.gitignore/config.js";
 let weerData="";
 let landenData="";
-window.onload = function() {
-    document.getElementById("landen").focus();
-    
-  };
+window.onload = ()=> {
+    document.getElementById("landen").focus();    
+};
 
-function fetchPicture(cityName){
+const fetchPicture=(cityName)=>{
     let count=0;
    fetch("https://api.unsplash.com/search/photos?query=" + cityName + "&client_id=" +Data.accesKey)
    //UNSPLASH_API_KEY
@@ -18,12 +17,15 @@ function fetchPicture(cityName){
        setInterval(function(){ 
         document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
         count=count+1;
+        if (count==9){
+            count=0;
+        }
     }, 10000);
        
     });
 }
 
-async function fetchApi(stad) {     
+const fetchApi= async(stad)=>{     
    
     fetch('https://api.openweathermap.org/data/2.5/forecast?q='+stad+','+landCode+'&APPID='+Data.key)  
     .then(function(resp) { return resp.json() }) // Convert data to json
@@ -39,7 +41,7 @@ async function fetchApi(stad) {
     });
 }
 
-async function fetchCities() {  
+const fetchCities= async()=> {  
 
     fetch('https://countriesnow.space/api/v0.1/countries')  
     .then(function(resp) { return resp.json() }) // Convert data to json
@@ -50,10 +52,8 @@ async function fetchCities() {
         const newOption=document.createElement("option")
         newOption.innerText=landenData[i].country;
         document.getElementById("landen").appendChild(newOption);
-        
-        }
-        
-        }
+        }        
+    }
     )
     .catch(function() {
         
@@ -64,13 +64,11 @@ const invoer=document.getElementById("landen")
 let huidigLand="";
 let huidiglandPositie=0;
 let landCode="";
-invoer.onchange= function maakLijst(land){
-    
-    
-    huidigLand=invoer.value;
-    
+
+invoer.onchange= (land)=>{    
+
+    huidigLand=invoer.value;    
     document.getElementById("steden").innerHTML="<option>Choose the city</option>";
-    
    
    for(let i=0;i<landenData.length;i++){
        let landNaam=landenData[i].country;
@@ -91,7 +89,7 @@ invoer.onchange= function maakLijst(land){
     
 }
 const invoerStad=document.getElementById("steden")
-invoerStad.onchange= function readyToFetch(){
+invoerStad.onchange= ()=>{
     
     console.log(invoerStad.value);
     fetchApi(invoerStad.value);
@@ -100,7 +98,7 @@ invoerStad.onchange= function readyToFetch(){
     
 }
 
-function displayWeather(){
+const displayWeather=()=>{
     const voorspelZone=document.getElementById("voorspelling");
     voorspelZone.innerHTML="";
     let d=new Date();    
