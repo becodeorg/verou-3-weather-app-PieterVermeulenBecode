@@ -3,27 +3,29 @@ import Data from "./data.gitignore/config.js";
 let countryData="";
 window.onload = ()=> {
     document.getElementById("landen").focus();
-    fetchAllCountries();    
+    fetchAllCountries();   
 };
 
-const fetchPicture=(cityName)=>{
+const fetchPicture=()=>{
     let count=0;
-   fetch("https://api.unsplash.com/search/photos?query=" + cityName + "&client_id=" +Data.accesKey)
+    const stad=getStad();   
+   fetch("https://api.unsplash.com/search/photos?query=" + stad + "&client_id=" +Data.accesKey)
    .then(function(resp) { return resp.json() })
    .then(function(image) {
        document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
-       setInterval(()=>{ 
-        document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
-        count=count+1;
-        if (count==9){
-            count=0;
-        }
-    }, 10000);       
+    //    setInterval(()=>{ 
+    //     document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
+    //     count=count+1;
+    //     if (count==9){
+    //         count=0;
+    //     }
+    // }, 10000);       
     });
 }
 
-const fetchApi= async(stad)=>{  
-    const landCode=getLandCode();   
+const fetchApi= async()=>{  
+    const landCode=getLandCode();
+    const stad=getStad();   
     fetch('https://api.openweathermap.org/data/2.5/forecast?q='+stad+','+landCode+'&APPID='+Data.key)  
     .then(function(resp) { return resp.json() })
     .then(function(data) {
@@ -41,18 +43,22 @@ const fetchAllCountries= async()=> {
     fetch('https://countriesnow.space/api/v0.1/countries')  
     .then(function(resp) { return resp.json() })
     .then(function(data) {
-        countryData=data.data;
-        
-        for(let i=0;i<=countryData.length;i++){            
-        const newOption=document.createElement("option")
-        newOption.innerText=countryData[i].country;
-        document.getElementById("landen").appendChild(newOption);
-        }        
+        countryData=data.data;       
+        createCountryList(countryData);                
     }
     )
     .catch(function() {        
-        // catch any errors
+        console.log("their was an error with fetchAllCountries function")
     });
+    return countryData;
+}
+
+const createCountryList=(countryData)=>{
+    for(let i=0;i<=countryData.length;i++){            
+        const newOption=document.createElement("option")
+        newOption.innerText=countryData[i].country;
+        document.getElementById("landen").appendChild(newOption);
+    }        
 }
 
 document.getElementById("landen").onchange= ()=>{    
@@ -87,12 +93,17 @@ const getLandCode=()=>{
     }
 }
 
-const stedenLijst=document.getElementById("steden");
 
-stedenLijst.onchange= () => {  
-    fetchApi(stedenLijst.value);
-    document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+stedenLijst.value+"</span>"
-    fetchPicture(stedenLijst.value);      
+const getStad=()=>{
+    const stedenLijst=document.getElementById("steden");    
+    return stedenLijst.value;
+}
+
+document.getElementById("steden").onchange= () => {  
+    fetchApi();
+    const stad =getStad();
+    document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+stad+"</span>"
+    fetchPicture();      
 }
 
 const displayWeather=(data)=>{
