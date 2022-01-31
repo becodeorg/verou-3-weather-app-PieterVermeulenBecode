@@ -1,5 +1,5 @@
 import Data from "./data.gitignore/config.js";
-let weerData="";
+
 let landenData="";
 window.onload = ()=> {
     document.getElementById("landen").focus();    
@@ -8,31 +8,25 @@ window.onload = ()=> {
 const fetchPicture=(cityName)=>{
     let count=0;
    fetch("https://api.unsplash.com/search/photos?query=" + cityName + "&client_id=" +Data.accesKey)
-   //UNSPLASH_API_KEY
-   .then(function(resp) { return resp.json() }) // Convert data to json
+   .then(function(resp) { return resp.json() })
    .then(function(image) {
-       //2yJhcHBfaWQiOjEyMDd9
-       console.log(image);
        document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
-       setInterval(function(){ 
+       setInterval(()=>{ 
         document.body.style.backgroundImage="url("+image.results[count].urls.regular+")";
         count=count+1;
         if (count==9){
             count=0;
         }
-    }, 10000);
-       
+    }, 10000);       
     });
 }
 
-const fetchApi= async(stad)=>{     
-   
+const fetchApi= async(stad)=>{  
+    const landCode=getLandCode();   
     fetch('https://api.openweathermap.org/data/2.5/forecast?q='+stad+','+landCode+'&APPID='+Data.key)  
-    .then(function(resp) { return resp.json() }) // Convert data to json
+    .then(function(resp) { return resp.json() })
     .then(function(data) {
-        console.log(data);
-        weerData= data;
-        displayWeather();
+        displayWeather(data);
     })
     .catch(function() {
         // catch any errors
@@ -44,7 +38,7 @@ const fetchApi= async(stad)=>{
 const fetchCities= async()=> {  
 
     fetch('https://countriesnow.space/api/v0.1/countries')  
-    .then(function(resp) { return resp.json() }) // Convert data to json
+    .then(function(resp) { return resp.json() })
     .then(function(data) {
         landenData=data.data;
         
@@ -55,50 +49,58 @@ const fetchCities= async()=> {
         }        
     }
     )
-    .catch(function() {
-        
+    .catch(function() {        
         // catch any errors
     });
 }
-const invoer=document.getElementById("landen")
-let huidigLand="";
-let huidiglandPositie=0;
-let landCode="";
 
-invoer.onchange= (land)=>{    
 
-    huidigLand=invoer.value;    
+
+
+
+document.getElementById("landen").onchange= ()=>{    
+    const landenLijst=document.getElementById("landen");  
     document.getElementById("steden").innerHTML="<option>Choose the city</option>";
    
    for(let i=0;i<landenData.length;i++){
        let landNaam=landenData[i].country;
-       huidiglandPositie=i;
        
-    if(invoer.value==landNaam){
-        landCode=landenData[huidiglandPositie].iso2;
-       console.log(landCode);
+       
+    if(landenLijst.value==landNaam){
+        
+
         for(let b=0;b<=landenData[i].cities.length;b++){
             const newOption=document.createElement("option")
             newOption.innerText=landenData[i].cities[b];
             document.getElementById("steden").appendChild(newOption);
-            }
-            document.getElementById("steden").focus();
         }
-    }  
-             
-    
+        document.getElementById("steden").focus();
+        }
+    }             
 }
-const invoerStad=document.getElementById("steden")
-invoerStad.onchange= ()=>{
-    
-    console.log(invoerStad.value);
-    fetchApi(invoerStad.value);
-    document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+invoerStad.value+"</span>"
-    fetchPicture(invoerStad.value);      
-    
+const getLandCode=()=>{
+    const landenLijst=document.getElementById("landen");
+      
+   for(let i=0;i<landenData.length;i++){
+       let landNaam=landenData[i].country;
+       
+       
+        if(landenLijst.value==landNaam){
+            let landCode=landenData[i].iso2;
+        return landCode;
+        }
+    }
 }
 
-const displayWeather=()=>{
+const stedenLijst=document.getElementById("steden");
+
+stedenLijst.onchange= () => {  
+    fetchApi(stedenLijst.value);
+    document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+stedenLijst.value+"</span>"
+    fetchPicture(stedenLijst.value);      
+}
+
+const displayWeather=(data)=>{
     const voorspelZone=document.getElementById("voorspelling");
     voorspelZone.innerHTML="";
     let d=new Date();    
@@ -120,15 +122,15 @@ const displayWeather=()=>{
     newDiv4.appendChild(newTitle);
     
     const newDiv2=document.createElement("div");
-    newDiv2.innerText="Temp: "+(weerData.list[i].main.temp-273.15).toFixed(2)+ '°C';
+    newDiv2.innerText="Temp: "+(data.list[i].main.temp-273.15).toFixed(2)+ '°C';
     newDiv4.appendChild(newDiv2);
         
     const newImg=document.createElement("img");
-    newImg.src="http://openweathermap.org/img/wn/"+weerData.list[i].weather[0].icon+".png";
+    newImg.src="http://openweathermap.org/img/wn/"+data.list[i].weather[0].icon+".png";
     newDiv4.appendChild(newImg);
 
     const newDiv3=document.createElement("div");
-    newDiv3.innerText="Feel's like: "+(weerData.list[i].main.feels_like-273.15).toFixed(2)+ "°C";
+    newDiv3.innerText="Feel's like: "+(data.list[i].main.feels_like-273.15).toFixed(2)+ "°C";
     newDiv4.appendChild(newDiv3);
 
     }
