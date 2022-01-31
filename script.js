@@ -8,32 +8,37 @@ window.onload = ()=> {
 const startWeatherApp=(countryData)=>{
     createCountryList(countryData);   
     document.getElementById("steden").onchange= () => {  
-        fetchApi(countryData);
-        const stad =getCity();
-        document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+stad+"</span>"
-        fetchPicture();      
+        citiesChanged(countryData);      
     }
-
-    document.getElementById("landen").onchange= ()=>{         
-        const landenLijst=document.getElementById("landen");  
-        document.getElementById("steden").innerHTML="<option>Choose the city</option>";
-       
-       for(let i=0;i<countryData.length;i++){
-           let landNaam=countryData[i].country;       
-           
-            if(landenLijst.value==landNaam){        
-    
-                for(let b=0;b<=countryData[i].cities.length;b++){
-                    const newOption=document.createElement("option")
-                    newOption.innerText=countryData[i].cities[b];
-                    document.getElementById("steden").appendChild(newOption);
-                }
-                document.getElementById("steden").focus();
-                }
-        }             
-    } 
+    document.getElementById("landen").onchange=()=>{         
+        createCityList(countryData);
+    }    
 }
 
+const citiesChanged=(countryData)=>{
+    fetchApi(countryData);
+        const stad =getCity();
+        document.getElementById("titel").innerHTML="What is the weather in <span class='bold'>"+stad+"</span>"
+        fetchPicture();
+}
+const createCityList=(countryData)=>{
+    const landenLijst=document.getElementById("landen");  
+    document.getElementById("steden").innerHTML="<option>Choose the city</option>";
+   
+   for(let i=0;i<countryData.length;i++){
+       let landNaam=countryData[i].country;       
+       
+        if(landenLijst.value==landNaam){        
+
+            for(let b=0;b<=countryData[i].cities.length;b++){
+                const newOption=document.createElement("option")
+                newOption.innerText=countryData[i].cities[b];
+                document.getElementById("steden").appendChild(newOption);
+            }
+            document.getElementById("steden").focus();
+        }
+    }  
+}
 const getLandCode=(countryData)=>{        
     const landenLijst=document.getElementById("landen");    
     for(let i=0;i<countryData.length;i++){
