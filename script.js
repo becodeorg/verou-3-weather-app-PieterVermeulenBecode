@@ -1,6 +1,6 @@
 import Data from "./data.gitignore/config.js";
 
-let landenData="";
+let countryData="";
 window.onload = ()=> {
     document.getElementById("landen").focus();    
 };
@@ -40,11 +40,11 @@ const fetchCities= async()=> {
     fetch('https://countriesnow.space/api/v0.1/countries')  
     .then(function(resp) { return resp.json() })
     .then(function(data) {
-        landenData=data.data;
+        countryData=data.data;
         
-        for(let i=0;i<=landenData.length;i++){            
+        for(let i=0;i<=countryData.length;i++){            
         const newOption=document.createElement("option")
-        newOption.innerText=landenData[i].country;
+        newOption.innerText=countryData[i].country;
         document.getElementById("landen").appendChild(newOption);
         }        
     }
@@ -54,39 +54,33 @@ const fetchCities= async()=> {
     });
 }
 
-
-
-
-
 document.getElementById("landen").onchange= ()=>{    
     const landenLijst=document.getElementById("landen");  
     document.getElementById("steden").innerHTML="<option>Choose the city</option>";
    
-   for(let i=0;i<landenData.length;i++){
-       let landNaam=landenData[i].country;
+   for(let i=0;i<countryData.length;i++){
+       let landNaam=countryData[i].country;       
        
-       
-    if(landenLijst.value==landNaam){
-        
+        if(landenLijst.value==landNaam){        
 
-        for(let b=0;b<=landenData[i].cities.length;b++){
-            const newOption=document.createElement("option")
-            newOption.innerText=landenData[i].cities[b];
-            document.getElementById("steden").appendChild(newOption);
-        }
-        document.getElementById("steden").focus();
-        }
+            for(let b=0;b<=countryData[i].cities.length;b++){
+                const newOption=document.createElement("option")
+                newOption.innerText=countryData[i].cities[b];
+                document.getElementById("steden").appendChild(newOption);
+            }
+            document.getElementById("steden").focus();
+            }
     }             
 }
 const getLandCode=()=>{
     const landenLijst=document.getElementById("landen");
       
-   for(let i=0;i<landenData.length;i++){
-       let landNaam=landenData[i].country;
+   for(let i=0;i<countryData.length;i++){
+       let landNaam=countryData[i].country;
        
        
         if(landenLijst.value==landNaam){
-            let landCode=landenData[i].iso2;
+            let landCode=countryData[i].iso2;
         return landCode;
         }
     }
@@ -109,6 +103,7 @@ const displayWeather=(data)=>{
     let month=d.getMonth()+1;
     console.log(day);
      console.log(month+1);
+     //TODO: when days are bigger then 31-> start at 1 again
     let dagenVanDeWeek=[day+"/"+month,(day+1)+"/"+month,(day+2)+"/"+month,(day+3)+"/"+month,(day+4)+"/"+month,(day+5)+"/"+month,(day+6)+"/"+month];
     
     for(let i=0;i<40;i=i+8){
@@ -137,4 +132,3 @@ const displayWeather=(data)=>{
 }
 
 fetchCities();
-
