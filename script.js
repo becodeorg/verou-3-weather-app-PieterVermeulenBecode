@@ -2,7 +2,8 @@ import Data from "./data.gitignore/config.js";
 
 let countryData="";
 window.onload = ()=> {
-    document.getElementById("landen").focus();    
+    document.getElementById("landen").focus();
+    fetchAllCountries();    
 };
 
 const fetchPicture=(cityName)=>{
@@ -35,7 +36,7 @@ const fetchApi= async(stad)=>{
     });
 }
 
-const fetchCities= async()=> {  
+const fetchAllCountries= async()=> {  
 
     fetch('https://countriesnow.space/api/v0.1/countries')  
     .then(function(resp) { return resp.json() })
@@ -131,4 +132,4 @@ const displayWeather=(data)=>{
     }
 }
 
-fetchCities();
+
